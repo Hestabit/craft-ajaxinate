@@ -164,7 +164,7 @@ Found any issue :confused: , [Create a Github Issue](https://github.com/Hestabit
 
 ## Credits
 
-- Developed by [Saurabh Ranjan](http://maddyboy.github.io)
+- Collaborators Saurabh Ranjan
 - Boilerplate by [pluginfactory](https://pluginfactory.io)
 
 Brought to you by [HestaBit](https://github.com/Hestabit)

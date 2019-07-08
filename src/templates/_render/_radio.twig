@@ -1,0 +1,29 @@
+{% import "craft-ajaxinate/_render/_myformmacro.twig" as forms %}
+
+{# type, name, value, placeholder, fieldType, class #}
+{% set ulClass = options.ulClass ?? '' %}
+{% set liClass = options.liClass ?? '' %}
+{% set checkFieldDiv = options.checkFieldDiv ?? '' %}
+
+
+{% if field['type'] == "craft\\fields\\RadioButtons" %}
+	<div class="{{ checkFieldDiv }} checkbox">
+		<span> {{ field['name'] }} </span>
+		{% set ftype = field['type'] %}
+
+		{% set field = craft.app.fields.getFieldByHandle(field['handle']) %}
+	 	
+			<ul class="{{ ulClass }}">
+			    {% for option in field.options %}
+			        {% set checked = entry is defined
+			            ? entry.field['handle'].contains(option.value)
+			            : option.default %}
+ 						<li class="{{ liClass }}">
+					        <label>
+					            <input type="radio" class="js_eFilterO" name="{{field['handle']}}" value="{{ option.value }}" data-ftype="{{ ftype }}">{{ option.label }}
+					        </label>
+			    		</li>
+			    {% endfor %}
+			</ul>
+		</div>
+{% endif %}

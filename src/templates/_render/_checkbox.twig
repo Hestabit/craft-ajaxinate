@@ -1,0 +1,37 @@
+{% import "craft-ajaxinate/_render/_myformmacro.twig" as forms %}
+
+{# type, name, value, placeholder, fieldType, class #}
+
+{% set ulClass = options.ulClass ?? '' %}
+{% set liClass = options.liClass ?? '' %}
+{% set checkFieldDiv = options.checkFieldDiv ?? '' %}
+
+{% if field['type'] == "craft\\fields\\Checkboxes" %}
+	{% set ftype = field['type'] %}
+	{% set field = craft.app.fields.getFieldByHandle(field['handle']) %}
+	<div class="{{ checkFieldDiv }} checkbox">
+	 	<span> {{ field['name'] }} </span>
+		<ul class="{{ ulClass }}">
+		    {% for option in field.options %}
+		        {% set checked = entry is defined
+		            ? entry.field['handle'].contains(option.value)
+		            : option.default %}
+		        <li class="{{ liClass }}">
+			        <label>
+			            <input type="checkbox" class="js_eFilterO" name="{{field['handle']}}" value="{{ option.value }}" data-ftype="{{ ftype }}">{{ option.label }}
+			        </label>
+		    	</li>
+		    {% endfor %}
+		</ul>
+	</div>
+	{% else %}
+		<div class="{{ checkFieldDiv }} featured">
+			<span> {{ field['name'] }} </span>
+			<ul class="{{ ulClass }}">
+		        <li class="{{ liClass }}">
+					{{ forms.input('checkbox', field['handle'], '', field['type'], "js_eFilterO" ) }}
+				</li>
+			</ul>
+		</div>
+{% endif %}
+

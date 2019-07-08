@@ -1,0 +1,7 @@
+{% import "craft-ajaxinate/_render/_myformmacro.twig" as forms %}
+
+{# type, name, value, placeholder, fieldType, class #}
+
+{% if field['type'] == "craft\\fields\\Color" %}
+	{{ field['handle'] }}
+{% endif %}

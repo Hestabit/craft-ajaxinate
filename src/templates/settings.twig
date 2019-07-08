@@ -1,0 +1,219 @@
+{#
+/**
+ * Entries Loader And Filter plugin for Craft CMS 3.x
+ *
+ * Entries Loader And Filter Settings.twig
+ *
+ * @author    Hestabit Technologies <technology@hestabit.com>
+ * @copyright Copyright (c) 2019 Hestabit Technologies
+ * @link      https://hestabit.com
+ * @package   CraftAjaxinate
+ * @since     1.0.0
+ */
+#}
+
+{% import "_includes/forms" as forms %}
+
+{% do view.registerAssetBundle("hestabit\\craftajaxinate\\assetbundles\\indexcpsection\\IndexCPSectionAsset") %}
+
+{# Section List #}
+{{ forms.multiselectField({
+        label:        "Select Section",
+        id:           "sectionsSelected",
+        required:     true,
+        options:      sections,
+        name: 'sectionsSelected',
+        values: settings['sectionsSelected']
+})
+}}
+
+{{ forms.textField({
+    label: 'Offset',
+    instructions: 'Enter the number of entries already loaded.Plugin will append new entries.',
+    id: 'offsetEntries',
+    name: 'offsetEntries',
+    value: '',
+    max: 9999,
+    size: 1,
+    min: 0,
+    type: 'number',
+    value: settings['offsetEntries']
+})
+}}
+
+{{ forms.textField({
+    label: 'Limit',
+    instructions: 'Enter the number of entries to load.',
+    id: 'limitEntries',
+    name: 'limitEntries',
+    value: '',
+    min: 1,
+    max: 9999,
+    size: 1,
+    type: 'number',
+    value: settings['limitEntries']
+})
+}}
+
+  <hr>
+    {% set siteRows = [] %}
+
+    {% for site in craft.app.sites.getAllSites() %}
+        {% set template = settings['outputTemplate'] %}
+        {% set currentSite = craft.app.sites.currentSite.handle %} 
+       
+        {% if template is not empty %}
+          {% set template = settings['outputTemplate'][currentSite]['template']  %}
+        {% endif %}
+    
+        {% set siteRows = siteRows|merge({
+            (site.handle): {
+                heading: site.name|t('site'),
+                template: {
+                    value: template,
+                },
+            }
+        }) %}
+    {% endfor %}
+
+
+    {{ forms.editableTableField({
+        label: "Entries Template"|t('app'),
+        instructions: "Choose template on which you want the result."|t('app'),
+        id: 'outputTemplate',
+        name: 'outputTemplate',
+        cols: {
+            heading: {
+                type: 'heading',
+                heading: "Site"|t('app'),
+                class: 'thin'
+            },
+            template: {
+                type: 'template',
+                heading: "Template"|t('app'),
+                info: "Entries object {{ entries }} will be available on this template."|t('app'),
+                code: true
+            },
+        },
+        rows: siteRows,
+        staticRows: true,
+    }) }}
+
+<hr/>
+{{ forms.lightswitchField({
+    label: 'Activate Filter and Soring.',
+    name: 'sortingFilterState',
+    id: 'sortingFilterState',
+    on: settings['sortingFilterState'],
+}) }}
+
+<div class="js_sortingFilterState" style="display: none;">
+    
+    {{ forms.checkboxSelectField({
+        label: 'Sort By Date',
+        name: 'sortBydate',
+        options: {
+            1: 'Newest First',
+            2: 'Oldest First',
+        },
+        values: settings['sortBydate'],
+    }) }}
+
+    {{ forms.lightswitchField({
+        label: 'Price Filter',
+        name: 'priceFilterState',
+        id: 'priceFilterState',
+        on: settings['priceFilterState'],
+    }) }}
+
+    <div style="display: none;" class="js_sortByPrice">
+            {{ forms.selectField({
+                label: 'Sort By Price',
+                instructions: 'Select price field',
+                name: 'sortByPrice',
+                id: 'sortByPrice',
+                required:     false,
+                options: fields,
+                value: settings['sortByPrice']
+            }) }}
+    </div>
+</div>
+
+
+ 
+{{ forms.lightswitchField({
+    label: 'Activate extra filter.',
+    name: 'extraFieldState',
+    id: 'extraFieldState',
+    on: settings['extraFieldState'],
+}) }}
+
+<div class="js_extraFieldState" style="display: none;">
+    {{ forms.multiselectField({
+        label: 'Filter fileds.',
+        instructions: 'Select all the fields for filters.',
+        name: 'extraFieldSelected',
+        id: 'extraFieldSelected',
+        required: false,
+        options: fields,
+        values: settings['extraFieldSelected']
+    }) }}
+</div>
+
+
+<hr>
+
+{{ forms.lightswitchField({
+    label: 'Activate category filter.',
+    name: 'catFilterState',
+    id: 'catFilterState',
+    on: settings['catFilterState'],
+}) }}
+
+{{ forms.lightswitchField({
+    label: 'Activate reset button.',
+    name: 'resetBtnState',
+    id: 'resetBtnState',
+    on: settings['resetBtnState'],
+}) }}
+
+{% js on load %}
+    $( "#settings-priceFilterState" ).on('change', function( event ) {
+        changeState();
+    });
+    
+    $( "#settings-sortingFilterState" ).on('change', function( event ) {
+        toggleSorting('#settings-sortingFilterState', '.js_sortingFilterState');
+    });
+
+     $( "#settings-extraFieldState" ).on('change', function( event ) {
+        toggleSorting('#settings-extraFieldState', '.js_extraFieldState');
+    });
+
+
+    function toggleSorting(swithcId, targetDiv) {
+       var filterState = $(swithcId).attr('aria-checked'); 
+        if(filterState == 'true') {
+            $(targetDiv).show();
+            return true;
+        }
+
+        $(targetDiv).hide();
+    }
+
+
+    function changeState() {
+        var priceFilterState = $('#settings-priceFilterState').attr('aria-checked'); 
+        if(priceFilterState == 'true') {
+            $('.js_sortByPrice').show();
+            return true;
+        }
+
+        $('.js_sortByPrice').hide();
+    }
+    
+    {# on load #}
+    changeState();
+    toggleSorting('#settings-sortingFilterState', '.js_sortingFilterState');
+    toggleSorting('#settings-extraFieldState', '.js_extraFieldState');
+{% endjs %}

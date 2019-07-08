@@ -1,0 +1,38 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * Entries Loader And Filter plugin for Craft CMS 3.x
+ *
+ * Entries Loader And Filter index.twig
+ *
+ * @author    Hestabit Technologies
+ * @copyright Copyright (c) 2019 Hestabit Technologies
+ * @link      https://hestabit.com
+ * @package   CraftAjaxinate
+ * @since     1.0.0
+ */
+#}
+
+{% extends "_layouts/cp" %}
+{% import "_includes/forms" as forms %}
+
+{# The title of this CP section #}
+{% set title = "Filters" %}
+{% set pluginCpUrl = url('craft-ajaxinate') %}
+{% set selectedTab = 'filters' %}
+
+{% set tabs = {
+    filters:  { label: "Filters Settings"|t('Filters Settings'), url: url('craft-ajaxinate') }
+} %}
+
+{# The content of the CP Section#}
+{% set content %}
+
+All custom form goes here
+
+{% endset %}
+
+{% js %}
+    window.csrfTokenName = "{{ craft.app.config.general.csrfTokenName|e('js') }}";
+    window.csrfTokenValue = "{{ craft.app.request.csrfToken|e('js') }}";
+{% endjs %}

@@ -1,0 +1,26 @@
+{% set ulClass = options.ulClass ?? '' %}
+{% set liClass = options.liClass ?? '' %}
+{% set checkFieldDiv = options.checkFieldDiv ?? '' %}
+
+
+{% if field['type'] == "craft\\fields\\Number" %}
+	<div class="{{ checkFieldDiv }}">
+	<span>
+		<label>{{ field['name'] }}</label>
+	</span>
+		<ul class="{{ ulClass }}">
+			<li class="{{ liClass }}">
+				{% if numberRange|length > 0 %}
+					{% if numberRange[0]['handle'] == field['handle'] %}
+					{% set ftype = field['type'] %}
+					{% set min = numberRange[0]['min'] %}
+					{% set max = numberRange[0]['max'] %}
+
+					<input type="range" class="js_eFilterO rangeSlider" name="{{field['handle']}}"  min="{{ min }}" max="{{ max }}" step="1" data-ftype="{{ ftype }}">
+					
+					{% endif %}
+				{% endif %}
+			</li>
+		</ul>	
+	</div>
+{% endif %}

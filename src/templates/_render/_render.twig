@@ -1,0 +1,109 @@
+{# user input classes #} 
+{% set ulClass = options.ulClass ?? '' %}
+{% set liClass = options.liClass ?? '' %}
+{% set selectClass = options.selectClass ?? '' %}
+{% set optionClass = options.optionClass ?? '' %}
+{% set aClass = options.aClass ?? '' %}
+{% set sortingWrapperClass = options.sortingWrapperClass ?? '' %}
+{% set catWrapperClass = options.catWrapperClass ?? '' %}
+{% set resetWrapperClass = options.resetWrapperClass ?? '' %}
+
+
+{# user input sorting names #}
+{% set nFirstName = options.nFirstName ?? 'Newest First' %}
+{% set oFirstName = options.oFirstName ?? 'Oldest First' %}
+{% set lPriceName = options.lPriceName ?? 'High To Low' %}
+{% set hPriceName = options.hPriceName ?? 'Low To High' %}
+{% set dSortName = options.dSortName ?? 'Default Sorting' %}
+
+
+{# from plugin settings #}
+{% set sortByDateValue = sortByDateValue ?? '' %}
+{% set sortByPriceState = sortByPriceState ?? false %}
+{% set sortingFilterState = sortingFilterState ?? false %}
+{% set catFilterState = catFilterState ?? false %}
+{% set resetBtnState = resetBtnState ?? false %}
+{% set extraFieldState = extraFieldState ?? false %}
+
+{% macro input(name, value, type = "text",fieldType, size = 20 ) %}
+    <input type="{{ type }}" name="{{ name }}" value="{{ value|e }}" size="{{ size }}" />
+{% endmacro %}
+
+{% import _self as forms %}
+
+{% set sortByPriceValue = sortByPriceValue ?? '' %}
+
+{% if resetBtnState %}
+
+	<div class="{{ resetWrapperClass }}">
+		<button id="js_ResetBtn">Reset</button>
+	</div>
+{% endif %}
+
+{% if sortingFilterState %}
+
+<div class="{{ sortingWrapperClass }}">
+	<div class="propFilter">
+		<select name="hb_sorting" id="hb_sorting" class="{{ selectClass }}" data-filtertype="hb_sorting">
+		    <option value="0" selected="selected">{{ dSortName }}</option>
+		   
+		    {# date sorting #}
+		    {% for date in sortByDateValue %}
+				<option value="{{date}}" class="{{ optionClass }}">
+					{% if date == 1 %}{{ nFirstName }}{% elseif date == 2 %}{{ oFirstName }}{% endif %}
+				</option>
+			{% endfor %}
+			
+			{% if sortByPriceState %}
+				{# price sorting #}
+				<option value="3" class="{{ optionClass }}" >{{ lPriceName }}</option>
+			    <option value="4" class="{{ optionClass }}" >{{ hPriceName }} </option>
+			{% endif %}
+			
+		</select>	
+	</div>
+</div>
+
+{% endif %}
+
+
+{# Fetch categories above this one
+	# group ( cat group )
+ #}
+
+{% if catFilterState %}
+
+	{% set catGroup = options.catGroup ?? '' %}
+	{% set categories = craft.categories
+		.group(catGroup)
+		.limit(11)
+		.all()
+		%}
+	<div class="{{ catWrapperClass }}">
+		<ul class="{{ ulClass }}">
+			{% nav category in categories %}
+				<li class="{{ liClass }}">
+				<label>
+				 <input type="checkbox" name="cat" class="js_Cat" value="{{category.slug }}" > {{ category.title }}
+				</label>
+					{% ifchildren %}
+						<ul>
+							{% children %}
+						</ul>
+					{% endifchildren %}
+				</li>
+			{% endnav %}
+		</ul>
+	</div>
+{% endif %}
+
+{% set tagHTml %}
+{% set tags = craft.tags.all() %}
+
+		{% for tag in tags %}
+			<span>
+				<label for="{{ tag }}">{{ tag }}</label>
+				<input type="checkbox" id="{{ tag }}">
+			</span>
+		{% endfor %}
+{% endset %}

@@ -49,6 +49,7 @@ To install the plugin, follow these instructions.
 
 - Add the below code to the template (on which you added the `csrf token`). This code will add the `Load More button`.
 
+
 ```twig
 
 {{ craft.craftAjaxinate.loadMoreVariable() }}
@@ -100,7 +101,8 @@ To install the plugin, follow these instructions.
   - catWrapperClass : Class to be added on `<div>` of category option.
   - checkFieldDiv : Class to be added on `<div>` of checkbox fields.
   - sortingWrapperClass : Class to be added on `<div>` of sorting option.
-  - catGroup : Array of categories handle like `['cms','craftcms']`.
+  - catGroup : Array of categories handle like `['cms','craftcms']` Required to show the categories filter.
+  - catGroupLimit : Number of categories child to show, `default is 10`.
   - tagGroup : Name of tag group handle like `'blogtag'`.
 
 ## Sorting Example with options
@@ -156,6 +158,8 @@ Some things to do, and ideas for potential features:
 - [x] Option to select the default template in backend
 - [x] Sorting
 - [x] Filters
+- [ ] Option to load entries on onload
+- [ ] Filter based on future entries
 - [ ] Search
 
 ## Support
@@ -164,7 +168,7 @@ Found any issue :confused: , [Create a Github Issue](https://github.com/Hestabit
 
 ## Credits
 
-- Collaborators Saurabh Ranjan
+- Developed by [Saurabh Ranjan](http://maddyboy.github.io)
 - Boilerplate by [pluginfactory](https://pluginfactory.io)
 
 Brought to you by [HestaBit](https://github.com/Hestabit)

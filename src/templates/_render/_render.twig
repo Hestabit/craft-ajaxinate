@@ -73,10 +73,12 @@
 
 {% if catFilterState %}
 
-	{% set catGroup = options.catGroup ?? '' %}
-	{% set categories = craft.categories
+	{% set catGroupList = options.catGroup ?? '' %}
+	{% set catGroupLimit = options.catGroupLimit ?? 10 %}
+	{% for catGroup in catGroupList %}
+		{% set categories = craft.categories
 		.group(catGroup)
-		.limit(11)
+		.limit(catGroupLimit)
 		.all()
 		%}
 	<div class="{{ catWrapperClass }}">
@@ -95,6 +97,8 @@
 			{% endnav %}
 		</ul>
 	</div>
+	{% endfor %}
+	
 {% endif %}
 
 {% set tagHTml %}

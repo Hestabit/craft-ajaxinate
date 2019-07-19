@@ -2,7 +2,7 @@
     "name": "hestabit/craft-ajaxinate",
     "description": "With this Plugin, you have now an option to load more entries (using ajax). You can refine the content that you want to load by using Filters based on Fields.",
     "type": "craft-plugin",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "keywords": [
         "craft",
         "cms",
@@ -10,35 +10,41 @@
         "craft-plugin",
         "entries loader and filter",
         "ajax loadmore",
-        "entries filters"
+        "entries filters",
+        "categories filters"
     ],
-    "support": {
+    "support":
+    {
         "docs": "https://github.com/Hestabit/craft-ajaxinate/blob/master/README.md",
         "issues": "https://github.com/Hestabit/craft-ajaxinate/issues"
     },
     "license": "proprietary",
     "authors": [
-        {
-            "name": "Hestabit Technologies",
-            "homepage": "https://github.com/Hestabit"
-        }
-    ],
+    {
+        "name": "Hestabit Technologies",
+        "homepage": "https://github.com/Hestabit"
+    }],
     "contributors": "Saurabh Ranjan <saurabh.ranjan@hestabit.in> (https://github.com/maddyBoy)",
-    "require": {
+    "require":
+    {
         "craftcms/cms": "^3.1.0"
     },
-    "autoload": {
-        "psr-4": {
+    "autoload":
+    {
+        "psr-4":
+        {
             "hestabit\\craftajaxinate\\": "src/"
         }
     },
-    "extra": {
+    "extra":
+    {
         "name": "Craft Ajaxinate",
         "handle": "craft-ajaxinate",
         "hasCpSettings": true,
         "hasCpSection": false,
         "changelogUrl": "https://raw.githubusercontent.com/Hestabit/craft-ajaxinate/master/CHANGELOG.md",
-        "components": {
+        "components":
+        {
             "craftAjaxinateService": "hestabit\\craftajaxinate\\services\\CraftAjaxinateService"
         },
         "class": "hestabit\\craftajaxinate\\CraftAjaxinate"

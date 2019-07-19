@@ -177,6 +177,16 @@
     on: settings['resetBtnState'],
 }) }}
 
+{{ forms.textField({
+    label: 'Message',
+    instructions: 'Message to show when no data is found.',
+    id: 'noMoreData',
+    name: 'noMoreData',
+    type: 'text',
+    value: settings['noMoreData']
+})
+}}
+
 {% js on load %}
     $( "#settings-priceFilterState" ).on('change', function( event ) {
         changeState();

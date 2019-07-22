@@ -209,7 +209,7 @@ class CraftAjaxinateService extends Component
         $sectionName = $this->getDefaultSections();
 
         $entryQuery = Entry::find();
-        
+         
         $sortByPrice = CraftAjaxinate::$plugin->getSettings()->sortByPrice;
        
         $sortByPrice = substr("$sortByPrice", 0, strrpos($sortByPrice, '_'));
@@ -217,7 +217,15 @@ class CraftAjaxinateService extends Component
         // filter based on sectionname
         $entryQuery->section($sectionName);
 
-          // filter based on sorting options [sort by date, price if enabled]
+        // get future events only if enabled in CP
+        $showFutureEntries = CraftAjaxinate::$plugin->getSettings()->showFutureEntries;
+        if ($showFutureEntries) {
+            $dateFieldSelected = CraftAjaxinate::$plugin->getSettings()->dateFieldSelected;
+            $dateFieldSelected = substr("$dateFieldSelected", 0, strrpos($dateFieldSelected, '_'));
+            $entryQuery->$dateFieldSelected(">=".date('Y-m-d'));
+        }
+
+        // filter based on sorting options [sort by date, price if enabled]
         if ($sorting) {
             switch ($sorting) {
                 case 1:

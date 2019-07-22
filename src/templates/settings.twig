@@ -161,6 +161,24 @@
 </div>
 
 
+{{ forms.lightswitchField({
+    label: 'Show future entries only.',
+    name: 'showFutureEntries',
+    id: 'showFutureEntries',
+    on: settings['showFutureEntries'],
+}) }}
+
+<div class="js_showFutureEntries" style="display: none;">
+    {{ forms.selectField({
+        label: 'Filter fileds.',
+        instructions: 'Select the date field.',
+        name: 'dateFieldSelected',
+        id: 'dateFieldSelected',
+        required: false,
+        options: fields,
+        value: settings['dateFieldSelected']
+    }) }}
+</div>
 <hr>
 
 {{ forms.lightswitchField({
@@ -196,10 +214,13 @@
         toggleSorting('#settings-sortingFilterState', '.js_sortingFilterState');
     });
 
-     $( "#settings-extraFieldState" ).on('change', function( event ) {
+    $( "#settings-extraFieldState" ).on('change', function( event ) {
         toggleSorting('#settings-extraFieldState', '.js_extraFieldState');
     });
 
+    $( "#settings-showFutureEntries" ).on('change', function( event ) {
+        toggleSorting('#settings-showFutureEntries', '.js_showFutureEntries');
+    });
 
     function toggleSorting(swithcId, targetDiv) {
        var filterState = $(swithcId).attr('aria-checked'); 
@@ -226,4 +247,5 @@
     changeState();
     toggleSorting('#settings-sortingFilterState', '.js_sortingFilterState');
     toggleSorting('#settings-extraFieldState', '.js_extraFieldState');
+    toggleSorting('#settings-showFutureEntries', '.js_showFutureEntries');
 {% endjs %}

@@ -55,6 +55,8 @@ class Settings extends Model
     public $catFilterState;
     public $resetBtnState;
     public $extraFieldState;
+    public $showFutureEntries;
+    public $dateFieldSelected;
     
     // Public Methods
     // =========================================================================

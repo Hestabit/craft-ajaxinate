@@ -40,24 +40,16 @@ class Settings extends Model
      * @var string
      */
     public $noMoreData = 'No more data found.';
-    public $sectionListAttribute = '';
     public $sectionsSelected = '';
     public $extraFieldSelected = '';
     public $offsetEntries = 0;
     public $limitEntries = 0;
     public $outputTemplate='';
-    public $customFieldData = '';
-    public $catList;
-    public $sortBydate;
-    public $sortByPrice;
-    public $priceFilterState;
-    public $sortingFilterState;
-    public $catFilterState;
     public $resetBtnState;
     public $extraFieldState;
     public $showFutureEntries;
     public $dateFieldSelected;
-    
+    public $showInitEntries;
     // Public Methods
     // =========================================================================
 

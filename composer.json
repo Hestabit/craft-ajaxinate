@@ -11,7 +11,11 @@
         "entries loader and filter",
         "ajax loadmore",
         "entries filters",
-        "categories filters"
+        "categories filters",
+        "future entries",
+        "custom queries",
+        "Multiple loader",
+        "Multiple filters"
     ],
     "support":
     {

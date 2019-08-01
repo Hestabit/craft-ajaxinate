@@ -39,23 +39,10 @@ class DefaultController extends Controller
      *         The actions must be in 'kebab-case'
      * @access protected
      */
-    protected $allowAnonymous = ['index', 'load-more', 'plugin-init'];
+    protected $allowAnonymous = ['load-more', 'plugin-init'];
 
     // Public Methods
     // =========================================================================
-
-    /**
-     * Handle a request going to our plugin's index action URL,
-     * e.g.: actions/craft-ajaxinate/default
-     *
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        $result = 'Welcome to the DefaultController actionIndex() method';
-
-        return $result;
-    }
 
     /**
      * e.g.: actions/craft-ajaxinate/default/plugin-init
@@ -68,21 +55,40 @@ class DefaultController extends Controller
         $this->requirePostRequest();
 
         $request = Craft::$app->getRequest();
+        $currentpage = $request->getBodyParam('currentpage');
+        $settings =  $request->getBodyParam('settings');
+        $settings =  $settings ?  $settings : [];
+        $defaultMsg =  CraftAjaxinate::$plugin->getSettings()->noMoreData;
+        $noMoreDataMsg =  isset($settings['noMoreDataMsg']) ? trim($settings['noMoreDataMsg']) : $defaultMsg;
+
+        $initLoad = isset($settings['initLoad']) ? $settings['initLoad'] : [];
 
         $totalEntries = CraftAjaxinate::$plugin->craftAjaxinateService->getCount();
-
         $limit = CraftAjaxinate::$plugin->getSettings()->limitEntries;
         $offset = CraftAjaxinate::$plugin->getSettings()->offsetEntries;
-        
+        // check entries onLoad status CP
+        $showInitEntries = CraftAjaxinate::$plugin->getSettings()->showInitEntries; 
+
+        $entriesData =  null;
+
+        // (initLoad passed as true ) || (Enabled in CP and not false on template)
+        if ( ($settings && $initLoad === 'true') || ( $initLoad !== 'false' && $showInitEntries) ) {
+           
+            $entriesData = CraftAjaxinate::$plugin->craftAjaxinateService
+                           ->prepareData($settings, $currentpage);
+
+        }
+
+        $message =  $entriesData ?  'Data loaded' : $noMoreDataMsg;
         if ($request->getAcceptsJson()) {
             return $this->asJson(
                 [
                  'success' => true,
                  'limit' => $limit,
                  'offset' => $offset,
-                 'entries' => 'init',
+                 'entries' => $entriesData,
                  'totalEntries' => $totalEntries,
-                 'message' => 'Button updated',
+                 'message' => $message,
                  ]
             );
         }
@@ -104,19 +110,24 @@ class DefaultController extends Controller
 
         $currentpage = $request->getBodyParam('currentpage');
         $sorting = $request->getBodyParam('sorting');
-        $catfilter = $request->getBodyParam('catfilter') ?  $request->getBodyParam('catfilter') : []; // array
-        $extrafilter = $request->getBodyParam('extrafilter') ?  $request->getBodyParam('extrafilter') : []; // array
+       
+        $settings = $request->getBodyParam('settings');
+        $settings = $settings ? $settings : [];
+        $defaultMsg =  CraftAjaxinate::$plugin->getSettings()->noMoreData;
+        $noMoreDataMsg =  isset($settings['noMoreDataMsg']) ? trim($settings['noMoreDataMsg']) : $defaultMsg;
         
+        $catfilter = $request->getBodyParam('catfilter');
+        $catfilter =  $catfilter ?  $catfilter : [];
 
+        $extrafilter = $request->getBodyParam('extrafilter'); 
+        $extrafilter = $extrafilter ? $extrafilter : []; // array
 
         $totalEntries = CraftAjaxinate::$plugin->craftAjaxinateService->getCount();
-        // Default number of entries
-        $defaultOffset = CraftAjaxinate::$plugin->getSettings()->offsetEntries;
         
         $entriesData = CraftAjaxinate::$plugin->craftAjaxinateService
-                        ->prepareData($currentpage, $sorting, $catfilter, $extrafilter);
+                        ->prepareData($settings, $currentpage, $extrafilter, $sorting, $catfilter);
 
-        $message =  $entriesData ?  'Data loaded' : CraftAjaxinate::$plugin->getSettings()->noMoreData;
+        $message =  $entriesData ?  'Data loaded' : $noMoreDataMsg;
 
         if ($request->getAcceptsJson()) {
             return $this->asJson(

@@ -34,12 +34,10 @@ use craft\db\Query;
  * @since   1.0.0
  *
  * @property CraftAjaxinateServiceService $craftAjaxinateService
- * @property Settings $settings
- * @method   Settings getSettings()
  */
 class CraftAjaxinate extends Plugin
 {
-    // Static Properties
+    // Public Properties
     // =========================================================================
 
     /**
@@ -48,9 +46,7 @@ class CraftAjaxinate extends Plugin
      */
     public static $plugin;
 
-    // Public Properties
-    // =========================================================================
-
+   
     /**
      * To execute your plugin’s migrations, you’ll need to increase its schema version.
      *
@@ -161,14 +157,7 @@ class CraftAjaxinate extends Plugin
    
 
         foreach ($fields as $field) {
-            $output[(int) $field['id']] = array(
-                'id'            => (int) $field['id'],
-                'handle'        => $field['handle'],
-                'type'          => $field['type'],
-                'name'          => $field['name'],
-            );
-
-            $fieldsData[$field['handle']."_".$field['id']] = $field['name'];
+            $fieldsData[$field['handle']] = $field['name'];
         }
        
         /**

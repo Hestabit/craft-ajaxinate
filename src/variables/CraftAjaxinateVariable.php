@@ -19,8 +19,6 @@ use craft\helpers\Template;
 /**
  * Entries Loader And Filter Variable
  *
- * Craft allows plugins to provide their own template variables, accessible from
- * the {{ craft }} global variable (e.g. {{ craft.craftAjaxinate }}).
  *
  * https://craftcms.com/docs/plugins/variables
  *
@@ -36,7 +34,7 @@ class CraftAjaxinateVariable
     /**
      * {{ craft.craftAjaxinate.loadMoreVariable }}
      *
-     * @param  null $optional
+     * @param  array $options
      * @return string
      */
 
@@ -65,39 +63,49 @@ class CraftAjaxinateVariable
      */
     public function render(array $options = [])
     {
-        $getExtraFieldsSelected = [];
-        $createFilterHtml = [];
+        $createFilterHtml = '';
 
-        $sortByDateValue = CraftAjaxinate::$plugin->craftAjaxinateService->getDateSorting();
-        $sortByPriceValue = CraftAjaxinate::$plugin->craftAjaxinateService->getPriceSorting();
-
-        $sortByPriceState = CraftAjaxinate::$plugin->getSettings()->priceFilterState;
-        $sortingFilterState = CraftAjaxinate::$plugin->getSettings()->sortingFilterState;
-        $catFilterState = CraftAjaxinate::$plugin->getSettings()->catFilterState;
+        //CP setting for reset button
         $resetBtnState = CraftAjaxinate::$plugin->getSettings()->resetBtnState;
-        $extraFieldState = CraftAjaxinate::$plugin->getSettings()->extraFieldState;
         
-        if ($extraFieldState) {
-            $getExtraFieldsSelected = CraftAjaxinate::$plugin->craftAjaxinateService->getExtraFieldsSelected();
+        // override CP setting for reset button
+        if (isset($options['resetBtnState'])  && $options['resetBtnState']) {
+            $resetBtnState = $options['resetBtnState'];
+        }
+        
+        //CP setting for filters only if user dont used `filters` option
+        $extraFieldState = CraftAjaxinate::$plugin->getSettings()->extraFieldState;
+        if (!isset($options['extraFilters']) && $extraFieldState) {
             $createFilterHtml = CraftAjaxinate::$plugin->craftAjaxinateService->createFilterHtml($options);
         }
 
+        // override CP setting for filters
+        if (isset($options['extraFilters']) && !empty($options['extraFilters'])) {
+            $createFilterHtml = CraftAjaxinate::$plugin->craftAjaxinateService->createFilterHtml($options);
+        }
+        
+        $catFilterState = false;
+        if (isset($options['catGroup']) && !empty(array_filter($options['catGroup']))) {
+            $catFilterState = true;
+        }
+       
+        $tagFilterHtml = '';
+        if (isset($options['tagGroup']) && !empty($options['tagGroup'])) {
+            $tagFilterHtml = CraftAjaxinate::$plugin->craftAjaxinateService->createTagFilterHtml($options);
+        }
+        
 
+       
         Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
 
         $html =  Craft::$app->view->renderTemplate(
             'craft-ajaxinate/_render/_render',
             [
             'options' => $options,
-            'sortByDateValue' => $sortByDateValue,
-            'sortByPriceValue' => $sortByPriceValue,
-            'sortByPriceState' => $sortByPriceState,
-            'sortingFilterState' => $sortingFilterState,
-            'catFilterState'    => $catFilterState,
             'resetBtnState' => $resetBtnState,
-            'extraFieldState' => $extraFieldState,
-            'getExtraFieldsSelected' => $getExtraFieldsSelected,
+            'catFilterState'    => $catFilterState,
             'createFilterHtml' => $createFilterHtml,
+            'tagFilterHtml' => $tagFilterHtml,
             ]
         );
         

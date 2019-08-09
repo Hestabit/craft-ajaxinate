@@ -6,6 +6,7 @@
  *
  * @link      https://hestabit.com
  * @copyright Copyright (c) 2019 Hestabit Technologies
+ * @author    Hestabit Technologies
  */
 
 namespace hestabit\craftajaxinate\variables;
@@ -18,7 +19,6 @@ use craft\helpers\Template;
 
 /**
  * Entries Loader And Filter Variable
- *
  *
  * https://craftcms.com/docs/plugins/variables
  *
@@ -58,7 +58,7 @@ class CraftAjaxinateVariable
 
     /**
      *
-     * @param  array $options All the option user passed while calling the render variable
+     * @param  array $options All the option user passed
      * @return string
      */
     public function render(array $options = [])
@@ -69,10 +69,10 @@ class CraftAjaxinateVariable
         $resetBtnState = CraftAjaxinate::$plugin->getSettings()->resetBtnState;
         
         // override CP setting for reset button
-        if (isset($options['resetBtnState'])  && $options['resetBtnState']) {
+        if (isset($options['resetBtnState'])) {
             $resetBtnState = $options['resetBtnState'];
         }
-        
+
         //CP setting for filters only if user dont used `filters` option
         $extraFieldState = CraftAjaxinate::$plugin->getSettings()->extraFieldState;
         if (!isset($options['extraFilters']) && $extraFieldState) {

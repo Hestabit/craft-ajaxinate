@@ -6,7 +6,7 @@
  *
  * @author    Hestabit Technologies <technology@hestabit.com>
  * @copyright Copyright (c) 2019 Hestabit Technologies
- * @link     https://www.hestabit.com/
+ * @link      https://www.hestabit.com/
  */
 
 namespace hestabit\craftajaxinate;
@@ -96,9 +96,9 @@ class CraftAjaxinate extends Plugin
             CraftVariable::class,
             CraftVariable::EVENT_INIT,
             function (Event $event) {
-            /**
-            * @var CraftVariable $variable
-            */
+                /**
+                * @var CraftVariable $variable
+                */
                 $variable = $event->sender;
                 $variable->set('craftAjaxinate', CraftAjaxinateVariable::class);
             }

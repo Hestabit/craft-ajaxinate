@@ -67,16 +67,14 @@ class DefaultController extends Controller
         $limit = CraftAjaxinate::$plugin->getSettings()->limitEntries;
         $offset = CraftAjaxinate::$plugin->getSettings()->offsetEntries;
         // check entries onLoad status CP
-        $showInitEntries = CraftAjaxinate::$plugin->getSettings()->showInitEntries; 
+        $showInitEntries = CraftAjaxinate::$plugin->getSettings()->showInitEntries;
 
         $entriesData =  null;
-
+      
         // (initLoad passed as true ) || (Enabled in CP and not false on template)
-        if ( ($settings && $initLoad === 'true') || ( $initLoad !== 'false' && $showInitEntries) ) {
-           
+        if (($settings && ($initLoad == true )) || (($initLoad != false) && $showInitEntries)) {
             $entriesData = CraftAjaxinate::$plugin->craftAjaxinateService
-                           ->prepareData($settings, $currentpage);
-
+                ->prepareData($settings, $currentpage);
         }
 
         $message =  $entriesData ?  'Data loaded' : $noMoreDataMsg;
@@ -119,13 +117,13 @@ class DefaultController extends Controller
         $catfilter = $request->getBodyParam('catfilter');
         $catfilter =  $catfilter ?  $catfilter : [];
 
-        $extrafilter = $request->getBodyParam('extrafilter'); 
+        $extrafilter = $request->getBodyParam('extrafilter');
         $extrafilter = $extrafilter ? $extrafilter : []; // array
 
         $totalEntries = CraftAjaxinate::$plugin->craftAjaxinateService->getCount();
         
         $entriesData = CraftAjaxinate::$plugin->craftAjaxinateService
-                        ->prepareData($settings, $currentpage, $extrafilter, $sorting, $catfilter);
+            ->prepareData($settings, $currentpage, $extrafilter, $sorting, $catfilter);
 
         $message =  $entriesData ?  'Data loaded' : $noMoreDataMsg;
 

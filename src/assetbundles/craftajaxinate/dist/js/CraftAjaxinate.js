@@ -213,7 +213,6 @@
 
         loadMoreBtn.attr("data-currentpage", Number(1));
         loadMoreBtn.attr("data-extrafilter", JSON.stringify(extraFilter));
-        console.log(settings);
         let catfilter = Array(loadMoreBtn.attr("data-catfilter"));
         let sorting = Number(loadMoreBtn.attr("data-sorting"));
 

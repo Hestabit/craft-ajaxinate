@@ -133,7 +133,7 @@ To install the plugin, follow these instructions.
       sortingWrapperClass: 'sortingWrapperClasss'
     }) }}
 
-Load 3 entries on page load and show filters of `featuredEntry (lightsqitch), price (number)`.Also, show all child categories of `mensClothing and shoes` and tags of `technology`.
+Load 3 entries on page load and show filters of `featuredEntry (lightswitch), price (number)`.Also, show all child categories of `mensClothing and shoes` and tags of `technology`.
 
     {{ craft.craftAjaxinate.render({
       template: 'ajax/stories.twig',

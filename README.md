@@ -28,7 +28,7 @@ This plugin requires `Craft CMS 3.0.0` or later.
 
 ## Installation.
 
-To install the plugin, follow these instructions.
+To install the plugin, follow the below instructions.
 
 1.  Open your terminal and go to your Craft project:
 
@@ -49,7 +49,7 @@ To install the plugin, follow these instructions.
 
 ## Steps to add Load More functionality.
 
-- Add `csrf token` to the template on which you want the Load More functionality. See a sample below.
+- Add `csrf token` to the template on which you want the Load More functionality. Scroll down for the example.
 
 - Add the below code to the template (on which you added the `csrf token`). This code will add the `Load More button`.
 
@@ -60,7 +60,7 @@ To install the plugin, follow these instructions.
 
 ```
 
-- Add this class **"ajaxDataDump"** to any existing or create a new empty `<div class="ajaxDataDump"></div>`on your template, Plugin will append the new entries to this div.
+- Add this class **"ajaxDataDump"** to any existing element or create a new empty `<div class="ajaxDataDump"></div>`on your template, Plugin will append the new entries to this div/element.
 
 - **Rendering Template** : Create a new **separate template**. In this template, you have access to `{{ entries }}` object. This object has all the entries based on settings. `Don't put any extra markup here like header or footer`. See an example below.
 
@@ -101,7 +101,7 @@ Sample code for calling the **Rendering Template**
 
 * **Options for filters and sorting** Pass below options to change the settings of the plugin. Available options are:
 
-  - template : Pass the **Rendering Templatet** path.
+  - template : Pass the **Rendering Template** path.
   - limit : Pass the limit.
   - offset : Entries to skip and load on page load.
   - initLoad : To show entries on page load like `initLoad:true` or `initLoad:false`
@@ -119,22 +119,24 @@ Sample code for calling the **Rendering Template**
   - query : Advanced query options, just pass the parameters in craft format. Scroll down for the examples.
   
   
-* **Options for adding class** Pass below-mentioned options to add the class names on different inputs.
+* **Options for adding class** Pass below-mentioned options to add the class names on different input controls.
 
-  - selectClass : Class to be added on `<select>`
-  - optionClass : Class to be added on `<option>`
+  - selectClass : Class to be added on `<select>`.
+  - optionClass : Class to be added on `<option>`.
   - ulClass : Class to be added on `<ul>`
   - liClass : Class to be added on `<li>`
   - resetWrapperClass : Class to be added on `<div>` of reset button
   - catWrapperClass : Class to be added on `<div>` of category option
   - checkFieldDiv : Class to be added on `<div>` of checkbox fields
   - sortingWrapperClass : Class to be added on `<div>` of sorting option
-  
-  - nFirstName : String to be used for **Newest First**. Default **Newest First**
-  - oFirstName : String to be used for **Oldest First**. Default **Oldest First**
-  - lPriceName : String to be used for **Low To High**. Default **Low To High**
-  - hPriceName : String to be used for **High To Low**. Default **High To Low**
-  - dSortName : String to be used for **Default Soring**. Default **Default Soring**
+ 
+* **Sorting control options** Pass below-mentioned options change the default strings.
+ 
+  - nFirstName : String to be used for **Newest First**. Default is **Newest First**
+  - oFirstName : String to be used for **Oldest First**. Default is **Oldest First**
+  - lPriceName : String to be used for **Low To High**. Default is **Low To High**
+  - hPriceName : String to be used for **High To Low**. Default is **High To Low**
+  - dSortName : String to be used for **Default Soring**. Default is **Default Soring**
 
  
 * **Options for changing the message**

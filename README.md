@@ -8,13 +8,13 @@ You have options for filters based on fields and categories.
 
 You have the sorting options available.
 
-Number fields are converted to `range` input type,you can apply css as per your need.
+Number fields are converted to `range` input type, you can apply CSS as per your need.
 
-You can control the options from the plugin setting page. Just watch below animation for available backend options.
+You can control the options from the plugin setting page or while calling the `render()`. Just watch below animation for available backend options.
 
 You can pass your custom query as well to get the entries as per your need.
 
-You have the option to create `Multiple Load More` instances on different templates.
+You have the option to create `Multiple Load More` instances on different templates with different settings.
 
 If you have already shown some entries (`desc` order) on a template, you can skip the number of entries by adjusting the offset in the Setting page or while calling the `render()`.We will skip those entries then.
 
@@ -40,7 +40,7 @@ To install the plugin, follow these instructions.
 
 3.  In the Control Panel, go to Settings → Plugins and click the “Install” button for Entries Loader And Filter.
 
-### :warning: Please select these `Supported Field` type only in the plugin setting page or passing in `render()` call.
+### :warning: Please select these `Supported Field` type only in the plugin settings page or passing in `render()` call.
 
 - Number
 - Radio
@@ -66,6 +66,14 @@ To install the plugin, follow these instructions.
 
 * Select **Rendering Template** in the plugin’s Setting page or while calling `render()`, that you just created in the above step.
 
+Sample code for calling the **Rendering Template**
+
+```twig
+        {{ craft.craftAjaxinate.render({
+                template: 'ajax/stories.twig',
+        }) }} 
+```
+
 * You are free to apply CSS and define HTML as per your need, on the entries in **Rendering Template**.
 
 - **Options** Available options for **Load More** button:
@@ -89,9 +97,10 @@ To install the plugin, follow these instructions.
        {{ craft.craftAjaxinate.render() }}
 ```
 
-- Adjust settings as per your needs from the plugin’s Setting page.
+- Adjust settings as per your needs from the plugin’s Setting page or pass the available options while calling `render()`.
 
-* **Options for filters and sorting** provide you a way to customize the html that is rendered through the plugin. Available options are:
+* **Options for filters and sorting** Pass below options to change the settings of the plugin. Available options are:
+
   - template : Pass the **Rendering Templatet** path.
   - limit : Pass the limit.
   - offset : Entries to skip and load on page load.
@@ -103,25 +112,33 @@ To install the plugin, follow these instructions.
                         'date':'dateHandleName',
                         'price':'priceHandleName'
                       },`
-  - query : Advanced query options, just pass the parameters in craft format. See examples below.
   - section : Pass the sections name like `['news', 'services']`
-  - selectClass : Class to be added on `<select>`.
-  - optionClass : Class to be added on `<option>`.
+  - catGroup : Array of categories handle like `['cms','craftcms']` Required to show the categories filter.
+  - catGroupLimit : Number of categories child to show, `default is 10`.
+  - tagGroup : Name of tag group handle like `'blogtag'`.
+  - query : Advanced query options, just pass the parameters in craft format. Scroll down for the examples.
+  
+  
+* **Options for adding class** Pass below-mentioned options to add the class names on different inputs.
+
+  - selectClass : Class to be added on `<select>`
+  - optionClass : Class to be added on `<option>`
+  - ulClass : Class to be added on `<ul>`
+  - liClass : Class to be added on `<li>`
+  - resetWrapperClass : Class to be added on `<div>` of reset button
+  - catWrapperClass : Class to be added on `<div>` of category option
+  - checkFieldDiv : Class to be added on `<div>` of checkbox fields
+  - sortingWrapperClass : Class to be added on `<div>` of sorting option
+  
   - nFirstName : String to be used for **Newest First**. Default **Newest First**
   - oFirstName : String to be used for **Oldest First**. Default **Oldest First**
   - lPriceName : String to be used for **Low To High**. Default **Low To High**
   - hPriceName : String to be used for **High To Low**. Default **High To Low**
   - dSortName : String to be used for **Default Soring**. Default **Default Soring**
-  - ulClass : Class to be added on `<ul>`.
-  - liClass : Class to be added on `<li>`.
-  - resetWrapperClass : Class to be added on `<div>` of reset button.
-  - catWrapperClass : Class to be added on `<div>` of category option.
-  - checkFieldDiv : Class to be added on `<div>` of checkbox fields.
-  - sortingWrapperClass : Class to be added on `<div>` of sorting option.
-  - catGroup : Array of categories handle like `['cms','craftcms']` Required to show the categories filter.
-  - catGroupLimit : Number of categories child to show, `default is 10`.
-  - tagGroup : Name of tag group handle like `'blogtag'`.
-  - noMoreDataMsg : Message to show when no entries is found as per the settings.
+
+ 
+* **Options for changing the message**
+  - noMoreDataMsg : Message to show when no entries is found as per the **above settings** or **user input**.
 
 
 
@@ -228,7 +245,7 @@ Append **field_** before handleName.
 
 
 <details>
-<summary> Example of csrf  ( There is no need to declare csrf if its already declared in your site)</summary>
+## <summary> Example of csrf  ( There is no need to declare csrf if its already declared in your site)</summary>
 
 ```js
 # Example of csrf  ( There is no need to declare csrf if its already declared in your site)

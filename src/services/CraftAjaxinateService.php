@@ -95,50 +95,12 @@ class CraftAjaxinateService extends Component
         return $offset;
     }
 
-     /**
-      * Get sorting from plugin setting.
-      *
-      * From any other plugin file, call it like this:
-      *
-      *  CraftAjaxinate::$plugin->craftAjaxinateService->getDateSorting()
-      *
-      * @return int
-      */
-    public function getDateSorting(): array
-    {
-        $sortBydate = [];
-        if (CraftAjaxinate::$plugin->getSettings()->sortBydate) {
-            $sortBydate = CraftAjaxinate::$plugin->getSettings()->sortBydate;
-        }
-        return $sortBydate;
-    }
-
-    /**
-     * Get sorting from plugin setting.
-     *
-     * From any other plugin file, call it like this:
-     *
-     *  CraftAjaxinate::$plugin->craftAjaxinateService->getPriceSorting()
-     *
-     * @return int
-     */
-    public function getPriceSorting(): string
-    {
-        $sortByPrice = [];
-        if (CraftAjaxinate::$plugin->getSettings()->sortByPrice) {
-            $sortByPrice = CraftAjaxinate::$plugin->getSettings()->sortByPrice;
-        }
-        return $sortByPrice;
-    }
-
-
-
     /**
      * Get total active entries.
      * CraftAjaxinate::$plugin->craftAjaxinateService->getCount()
      *
      * @param  string $sectionName
-     * @return int
+     * @return int|null
      */
     public function getCount($sectionName = null)
     {
@@ -188,58 +150,83 @@ class CraftAjaxinateService extends Component
      *
      * @return int
      */
-    public function prepareData(int $currentpage = null, int $sorting = null, array $catfilter = [], array $extrafilter = [])
+    public function prepareData(array $settings = [], int $currentpage = null, array $extrafilter = [], int $sorting = null, array $catfilter = [])
     {
-
-        $imageUrl = [];
+       
         $path =  CraftAjaxinate::$plugin->getSettings()->outputTemplate;
-        
-        // get current active site handle
+
+        // get current active site handle from CP
         $currentSite = Craft::$app->getSites()->getCurrentSite()->handle;
         $path = $path[$currentSite]['template'];
 
+        // Path override
+        if (isset($settings) && !empty($settings['template'])) {
+            $path = $settings['template'];
+        }
+       
         // if $path is emtpy return false
         if (empty($path)) {
-                  return false;
+            return false;
         }
 
         $limit = $this->getDefaultLimit();
-        $offset = $this->getDefaultOffset();
+        if (isset($settings) && !empty($settings['limit'])) {
+            $limit = $settings['limit'];
+        }
+
+
+        $defaultOffset = $this->getDefaultOffset();
+        if (isset($settings) && !empty($settings['offset'])) {
+            $defaultOffset = $settings['offset'];
+        }
 
         $sectionName = $this->getDefaultSections();
-
-        $entryQuery = Entry::find();
+        if (isset($settings) && !empty($settings['section'])) {
+            $sectionName = $settings['section'];
+        }
         
-        $sortByPrice = CraftAjaxinate::$plugin->getSettings()->sortByPrice;
-       
-        $sortByPrice = substr("$sortByPrice", 0, strrpos($sortByPrice, '_'));
+        $entryQuery = Entry::find();
+        $sortByPrice = null;
+        if (isset($settings['sortingFilters']['price'])) {
+            $sortByPrice = $settings['sortingFilters']['price'];
+        }
 
-        // filter based on sectionname
+        // filter based on section name
         $entryQuery->section($sectionName);
 
-          // filter based on sorting options [sort by date, price if enabled]
-        if ($sorting) {
-            switch ($sorting) {
-                case 1:
-                    $entryQuery->orderBy('postDate desc');
-                    break;
+    
+        // get future events only if enabled in CP and
+        // query param is not passed in render call.
+        $showFutureEntries = CraftAjaxinate::$plugin->getSettings()->showFutureEntries;
+        if ($showFutureEntries && (!isset($settings['query'])) ) {
 
-                case 2:
-                    $entryQuery->orderBy('postDate asc');
-                    break;
+            $dateFieldSelected = CraftAjaxinate::$plugin->getSettings()->dateFieldSelected;
+            $clientTimeZone = new \DateTimeZone('UTC');
+            $date = new \DateTime('', $clientTimeZone);
+            $date =  $date->format('Y-m-d H:i:s');
+            $entryQuery->$dateFieldSelected(">=$date");
+        }
 
-                case 3:
-                    $entryQuery->orderBy("$sortByPrice desc");
-                    break;
+        // filter based on sorting options [sort by date, price if enabled]
+        switch ($sorting) {
+        case 1:
+            $entryQuery->orderBy('postDate desc');
+            break;
 
-                case 4:
-                    $entryQuery->orderBy("$sortByPrice asc");
-                    break;
+        case 2:
+            $entryQuery->orderBy('postDate asc');
+            break;
 
-                default:
-                     $entryQuery->orderBy('postDate asc');
-                    break;
-            }
+        case 3:
+            $entryQuery->orderBy("$sortByPrice desc");
+            break;
+
+        case 4:
+            $entryQuery->orderBy("$sortByPrice asc");
+            break;
+        default:
+            $entryQuery->orderBy('postDate desc');
+            break;
         }
 
          // filter based on category
@@ -250,7 +237,7 @@ class CraftAjaxinateService extends Component
               );
         }
 
-        // call template based on imput type user clicked on frontend
+        // Query based on imput type user clicked on frontend
         if ($extrafilter && !empty($extrafilter[0])) {
             $relatedTo = [];
             $fieldList = [];
@@ -260,24 +247,24 @@ class CraftAjaxinateService extends Component
                 $inputValue = $value['value'];
 
                 switch ($value['ftype']) {
-                    case 'craft\\fields\\Tags':
-                        $relatedTo[] = $value['value'];
-                        $fieldList[] = $value['handle'];
-                        $relationFilter = true;
-                        break;
+                case 'craft\\fields\\Tags':
+                    $relatedTo[] = $value['value'];
+                    $fieldList[] = $value['handle'];
+                    $relationFilter = true;
+                    break;
               
-                    case 'craft\\fields\\Checkboxes':
-                    case 'craft\\fields\\RadioButtons':
-                        $valReturned = $this->_applyFieldFilter($entryQuery, $handleName, $inputValue);
-                        break;
+                case 'craft\\fields\\Checkboxes':
+                case 'craft\\fields\\RadioButtons':
+                    $valReturned = $this->_applyFieldFilter($entryQuery, $handleName, $inputValue);
+                    break;
 
-                    case 'craft\\fields\\Lightswitch':
-                        $entryQuery->$handleName = 1;
-                        break;
+                case 'craft\\fields\\Lightswitch':
+                    $entryQuery->$handleName = 1;
+                    break;
               
-                    case 'craft\\fields\\Number':
-                        $entryQuery->$handleName("<= {$inputValue}");
-                        break;
+                case 'craft\\fields\\Number':
+                    $entryQuery->$handleName("<= {$inputValue}");
+                    break;
                 }
             }
 
@@ -290,20 +277,38 @@ class CraftAjaxinateService extends Component
             }
         }
 
-        // filter based on limit [based on setting in cp]
+        if (isset($settings['query']) && !empty(array_filter($settings['query']))) {
+            $query = $settings['query'];
+            foreach ($query as $key => $value) {
+                $entryQuery->$key($value);
+            }
+        }
+
         $entryQuery->limit($limit);
+       
+        // offset behave differently if showInitEntries activated (-_-)
+        $showInitEntries = CraftAjaxinate::$plugin->getSettings()->showInitEntries;
+        if (isset($settings['initLoad']) && !empty($settings['initLoad'])) {
+            $showInitEntries = $settings['initLoad'];
+        }
 
-        // calculate offset,in CP user have option to skip entries,
-        // we treat it as offset
-        $offset = $offset + (($currentpage-1)*$limit);
-
+        // It's a init call or a reset call and currentpage will be 1.
+        if ($showInitEntries && $currentpage === 1) {
+            // No skip
+            $offset = 0;
+            // set limit to offset as we need to load the same number of entries.
+            $entryQuery->limit($defaultOffset);
+        } else {
+            // In CP and in render varible call user have option to skip entries,
+            $offset = $defaultOffset + (($currentpage-2)*$limit);
+        }
+       
         // filter based on offset
         $entryQuery->offset($offset);
         
         $entries = $entryQuery->all();
-
+        
         if ($entries) {
-            // return $entries;
             return $this->renderData($offset, $path, $entries);
         }
 
@@ -340,7 +345,7 @@ class CraftAjaxinateService extends Component
      * Get cat slug by cat name.
      *
      * @param  string $catName
-     * @return string
+     * @return object
      */
     public function getCatSlug($catName = null)
     {
@@ -379,6 +384,7 @@ class CraftAjaxinateService extends Component
 
     /**
      * Get all the selected sections in CP
+     *
      * @param  string $value
      * @return array
      */
@@ -390,6 +396,7 @@ class CraftAjaxinateService extends Component
 
     /**
      * Get all the selected fields in CP
+     *
      * @param  string $value
      * @return array
      */
@@ -400,11 +407,12 @@ class CraftAjaxinateService extends Component
     }
         
      /**
-     * Calculate range of any number field
-     * @param  string $sectionName
-     * @param  string $handle
-     * @return array
-     */
+      * Calculate range of any number field
+      *
+      * @param  string $sectionName
+      * @param  string $handle
+      * @return array
+      */
     public function getNumberRange($sectionName = null, $handle = null)
     {
         $numbeRange = [];
@@ -431,9 +439,10 @@ class CraftAjaxinateService extends Component
 
     /**
      * Calculate range of any number field
-     * @param  [type] $sectionName [description]
-     * @param  [type] $handle      [description]
-     * @return [type]              [description]
+     *
+     * @param  string $sectionName
+     * @param  string $handle     
+     * @return array             
      */
     public function getExtraFiltersRange($sectionName = null, $handle = null)
     {
@@ -441,119 +450,108 @@ class CraftAjaxinateService extends Component
         $extraFieldState = CraftAjaxinate::$plugin->getSettings()->extraFieldState;
         if ($handle != null) {
              $numbeRange[] = $this->getNumberRange('', $handle);
-        } else if ($extraFieldState) {
-            $getExtraFieldsSelected = CraftAjaxinate::$plugin->craftAjaxinateService->getExtraFieldsSelected();
-            foreach ($getExtraFieldsSelected as $handle) {
-                $handle = substr("$handle", 0, strrpos($handle, '_'));
-                $numbeRange[] = $this->getNumberRange('', $handle);
-            }
         }
+
         // remove empty rows, due to non numeric $handle
-         return array_filter($numbeRange);
+        return array_filter($numbeRange);
     }
 
     /**
      * Call templates based on type of input passed in $options
      *
-     * @param  array $options Array of all the options user passed
+     * @param array $options Array of all the options user passed
      */
     public function createFilterHtml(array $options = [])
     {
         $isTagAdded = false;
         $handleIdList = [];
-        $html = '';
-        $fields = (new Query())
-                    ->select(['id','handle','name','instructions','type'])
-                    ->from(['{{%fields}}'])
-                    ->all();
+        $fields = [];
 
+        if (isset($options['extraFilters'])) {
+            $fields = $options['extraFilters'];
+        } else {
+            $fields = CraftAjaxinate::$plugin->craftAjaxinateService->getExtraFieldsSelected();
+        }
        
+
+        $html = '';
         Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
 
-         $ectraFields = CraftAjaxinate::$plugin->craftAjaxinateService->getExtraFieldsSelected();
-        foreach ($ectraFields as $value) {
-            $handleIdList[] = substr("$value", strrpos($value, '_') + 1);
-        }
-
         foreach ($fields as $field) {
-            $output[(int) $field['id']] = array(
-                'id'            => (int) $field['id'],
-                'handle'        => $field['handle'],
-                'name'          => $field['name'],
-                'instructions'  => $field['instructions'],
-                'type'          => $field['type']
-            );
-
-            // call template based on input field type
-            if (in_array($field['id'], $handleIdList)) {
-                switch ($field['type']) {
-                    case 'craft\fields\PlainText':
-                        $html .=  Craft::$app->view->renderTemplate(
-                            'craft-ajaxinate/_render/_text',
-                            [
-                            'field' => $field,
-                            'options' => $options,
-                            ]
-                        );
-                        break;
-                    case 'craft\fields\Number':
-                        $html .=  Craft::$app->view->renderTemplate(
-                            'craft-ajaxinate/_render/_number',
-                            [
-                            'field' => $field,
-                            'options' => $options,
-                            'numberRange' => $this->getExtraFiltersRange('', $field['handle']),
-                            ]
-                        );
-                        break;
-                    case 'craft\fields\Lightswitch':
-                        $html .=  Craft::$app->view->renderTemplate(
-                            'craft-ajaxinate/_render/_checkbox',
-                            [
-                            'field' => $field,
-                            'options' => $options,
-                            ]
-                        );
-                        break;
-                    case 'craft\fields\Checkboxes':
-                        $html .=  Craft::$app->view->renderTemplate(
-                            'craft-ajaxinate/_render/_checkbox',
-                            [
-                            'field' => $field,
-                            'options' => $options,
-                            ]
-                        );
-                        break;
-                    case 'craft\fields\RadioButtons':
-                        $html .=  Craft::$app->view->renderTemplate(
-                            'craft-ajaxinate/_render/_radio',
-                            [
-                            'field' => $field,
-                            'options' => $options,
-                            ]
-                        );
-                        break;
-                    case 'craft\fields\Tags':
-                        if ($isTagAdded) {
-                            break;
-                        }
-                        $html .=  Craft::$app->view->renderTemplate(
-                            'craft-ajaxinate/_render/_tags',
-                            [
-                            'field' => $field,
-                            'options' => $options,
-                                ]
-                        );
-                        $isTagAdded= true;
-                        break;
-                    default:
-                        // code...
-                        break;
-                }
+            $field = $this->getFieldDetails($field);
+            switch ($field['type']) {
+            case 'craft\fields\Number':
+                $html .=  Craft::$app->view->renderTemplate(
+                    'craft-ajaxinate/_render/_number',
+                    [
+                    'field' => $field,
+                    'options' => $options,
+                    'numberRange' => $this->getExtraFiltersRange('', $field['handle']),
+                    ]
+                );
+                break;
+            case 'craft\fields\Lightswitch':
+            case 'craft\fields\Checkboxes':
+                $html .=  Craft::$app->view->renderTemplate(
+                    'craft-ajaxinate/_render/_checkbox',
+                    [
+                    'field' => $field,
+                    'options' => $options,
+                    ]
+                );
+                break;
+            case 'craft\fields\RadioButtons':
+                $html .=  Craft::$app->view->renderTemplate(
+                    'craft-ajaxinate/_render/_radio',
+                    [
+                    'field' => $field,
+                    'options' => $options,
+                    ]
+                );
+                break;
             }
         }
 
         Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_SITE);
-        echo Template::raw($html);
+        return Template::raw($html);
+    }
+
+    public function createTagFilterHtml(array $options = [])
+    {   
+        Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
+        $html = '';
+        if (isset($options['tagGroup'])) {
+            $tagGroup = $options['tagGroup'];
+            $html .=  Craft::$app->view->renderTemplate(
+                'craft-ajaxinate/_render/_tags',
+                [
+                    'options' => $options,
+                ]
+            );
+        }
+
+        Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_SITE);
+        return Template::raw($html);
+    }
+    
+    /**
+     * Field details by handle name
+     *
+     * @param  string $fieldName handle name
+     * @return array
+     */
+    public function getFieldDetails($fieldName = '')
+    {
+        if ($fieldName === '') {
+            return null;
+        }
+
+        $field = (new Query())
+            ->select(['type','name', 'handle'])
+            ->from(['{{%fields}}'])
+            ->where(['handle' => $fieldName])
+            ->one();
+
+        return $field;
     }
 }

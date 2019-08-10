@@ -12,13 +12,12 @@
 		{% set ftype = field['type'] %}
 
 		{% set field = craft.app.fields.getFieldByHandle(field['handle']) %}
-	 	
 			<ul class="{{ ulClass }}">
 			    {% for option in field.options %}
 			        {% set checked = entry is defined
 			            ? entry.field['handle'].contains(option.value)
 			            : option.default %}
- 						<li class="{{ liClass }}">
+							<li class="{{ liClass }}">
 					        <label>
 					            <input type="radio" class="js_eFilterO" name="{{field['handle']}}" value="{{ option.value }}" data-ftype="{{ ftype }}">{{ option.label }}
 					        </label>

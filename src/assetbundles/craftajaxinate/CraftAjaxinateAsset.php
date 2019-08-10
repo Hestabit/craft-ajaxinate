@@ -37,7 +37,9 @@ class CraftAjaxinateAsset extends AssetBundle
 {
     // Public Methods
     // =========================================================================
-
+    public $jsOptions = [
+    'async' => 'async',
+    ];
     /**
      * Initializes the bundle.
      */

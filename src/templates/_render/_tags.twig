@@ -3,22 +3,20 @@
 {% set checkFieldDiv = options.checkFieldDiv ?? '' %}
 
 {# type, name, value, placeholder, fieldType, class #}
-
-{% if field['type'] == "craft\\fields\\Tags" %}
+{% set fieldType = "craft\\fields\\Tags" %}
 {% set tagGroup = options.tagGroup ?? '' %}
 	<div class="{{ checkFieldDiv }} tags">
-		<span> {{ field['name'] }} </span>
+			<span>Tags</span>
 			{% set myTagQuery = craft.tags.group(tagGroup) %}
 			{% set tags = myTagQuery.all() %}
 			<ul class="{{ ulClass }}">
 				{% for tag in tags %}
-				
 				 <li class="{{ liClass }}">
-					<label>
-						<input type="checkbox" value="{{tag.id}}" name="{{field['handle']}}" class="js_eFilterO" data-ftype="{{ field['type'] }}">{{ tag }}
+					<label for={{tag}}>
+						<input type="checkbox" value="{{tag.id}}" id="{{tag}}" name="{{tag}}" class="js_eFilterO" data-ftype="{{ fieldType }}">{{ tag }}
 					</label>
 				</li>
 				{% endfor %}
 			</ul>
 	</div>
-{% endif %}
+

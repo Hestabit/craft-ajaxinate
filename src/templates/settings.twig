@@ -27,9 +27,22 @@
 })
 }}
 
+<hr>
+
+{{ forms.lightswitchField({
+    label: 'Load entries on page load.',
+    name: 'showInitEntries',
+    id: 'showInitEntries',
+    on: settings['showInitEntries'],
+}) }}
+
+<div class="js_showInitEntries" style="display: none; color: #8f98a3;">
+    <p>Offset will be used to load entries.Adjust as per your need.</p>
+</div>
+
 {{ forms.textField({
     label: 'Offset',
-    instructions: 'Enter the number of entries already loaded.Plugin will append new entries.',
+    instructions: 'Enter the number of entries already loaded.Same number of entries will be loaded on page load if active.',
     id: 'offsetEntries',
     name: 'offsetEntries',
     value: '',
@@ -40,6 +53,8 @@
     value: settings['offsetEntries']
 })
 }}
+
+<hr>
 
 {{ forms.textField({
     label: 'Limit',
@@ -55,7 +70,26 @@
 })
 }}
 
-  <hr>
+<hr>
+{{ forms.lightswitchField({
+    label: 'Show future entries only.',
+    name: 'showFutureEntries',
+    id: 'showFutureEntries',
+    on: settings['showFutureEntries'],
+}) }}
+
+<div class="js_showFutureEntries" style="display: none;">
+    {{ forms.selectField({
+        label: 'Filter fileds.',
+        instructions: 'Select the date field.',
+        name: 'dateFieldSelected',
+        id: 'dateFieldSelected',
+        required: false,
+        options: fields,
+        value: settings['dateFieldSelected']
+    }) }}
+</div>
+<hr>
     {% set siteRows = [] %}
 
     {% for site in craft.app.sites.getAllSites() %}
@@ -100,47 +134,7 @@
     }) }}
 
 <hr/>
-{{ forms.lightswitchField({
-    label: 'Activate Filter and Soring.',
-    name: 'sortingFilterState',
-    id: 'sortingFilterState',
-    on: settings['sortingFilterState'],
-}) }}
 
-<div class="js_sortingFilterState" style="display: none;">
-    
-    {{ forms.checkboxSelectField({
-        label: 'Sort By Date',
-        name: 'sortBydate',
-        options: {
-            1: 'Newest First',
-            2: 'Oldest First',
-        },
-        values: settings['sortBydate'],
-    }) }}
-
-    {{ forms.lightswitchField({
-        label: 'Price Filter',
-        name: 'priceFilterState',
-        id: 'priceFilterState',
-        on: settings['priceFilterState'],
-    }) }}
-
-    <div style="display: none;" class="js_sortByPrice">
-            {{ forms.selectField({
-                label: 'Sort By Price',
-                instructions: 'Select price field',
-                name: 'sortByPrice',
-                id: 'sortByPrice',
-                required:     false,
-                options: fields,
-                value: settings['sortByPrice']
-            }) }}
-    </div>
-</div>
-
-
- 
 {{ forms.lightswitchField({
     label: 'Activate extra filter.',
     name: 'extraFieldState',
@@ -160,16 +154,7 @@
     }) }}
 </div>
 
-
 <hr>
-
-{{ forms.lightswitchField({
-    label: 'Activate category filter.',
-    name: 'catFilterState',
-    id: 'catFilterState',
-    on: settings['catFilterState'],
-}) }}
-
 {{ forms.lightswitchField({
     label: 'Activate reset button.',
     name: 'resetBtnState',
@@ -188,16 +173,16 @@
 }}
 
 {% js on load %}
-    $( "#settings-priceFilterState" ).on('change', function( event ) {
-        changeState();
-    });
-    
-    $( "#settings-sortingFilterState" ).on('change', function( event ) {
-        toggleSorting('#settings-sortingFilterState', '.js_sortingFilterState');
+  
+    $( "#settings-extraFieldState" ).on('change', function( event ) {
+        toggleSorting('#settings-extraFieldState', '.js_extraFieldState');
     });
 
-     $( "#settings-extraFieldState" ).on('change', function( event ) {
-        toggleSorting('#settings-extraFieldState', '.js_extraFieldState');
+    $( "#settings-showFutureEntries" ).on('change', function( event ) {
+        toggleSorting('#settings-showFutureEntries', '.js_showFutureEntries');
+    });
+    $( "#settings-showInitEntries" ).on('change', function( event ) {
+        toggleSorting('#settings-showInitEntries', '.js_showInitEntries');
     });
 
 
@@ -211,19 +196,10 @@
         $(targetDiv).hide();
     }
 
-
-    function changeState() {
-        var priceFilterState = $('#settings-priceFilterState').attr('aria-checked'); 
-        if(priceFilterState == 'true') {
-            $('.js_sortByPrice').show();
-            return true;
-        }
-
-        $('.js_sortByPrice').hide();
-    }
-    
     {# on load #}
-    changeState();
-    toggleSorting('#settings-sortingFilterState', '.js_sortingFilterState');
     toggleSorting('#settings-extraFieldState', '.js_extraFieldState');
+    toggleSorting('#settings-showFutureEntries', '.js_showFutureEntries');
+    toggleSorting('#settings-showInitEntries', '.js_showInitEntries');
+
+
 {% endjs %}

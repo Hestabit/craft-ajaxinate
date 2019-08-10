@@ -2,8 +2,10 @@
 {% set btnWrapperClass = options.btnWrapperClass ?? '' %}
 {% set loadMoreName = options.loadMoreName ?? 'Load More' %}
 
-<div id="js_Hb_LoadMore" class="{{ btnWrapperClass }}" data-currentpage="0" data-totalpages="0" data-limit="" data-sorting="0" data-catfilter="" data-extrafilter="[{}]" >
-    <span class="loadMoreBtn">{{ loadMoreName }}</span>
-</div>
+<form class="ajaxinateLoadMore" name="ajaxinateLoadMore" method="POST">
+	<div id="js_Hb_LoadMore" class="{{ btnWrapperClass }}" data-currentpage="0" data-totalpages="0" data-limit="" data-sorting="0" data-catfilter="" data-extrafilter="[{}]" >
+	    <span class="loadMoreBtn">{{ loadMoreName }}</span>
+	</div>
 
-<div class="js_elMessage"></div>
+	<div class="js_elMessage"></div>
+</form>

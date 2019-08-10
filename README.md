@@ -136,7 +136,7 @@ Sample code for calling the **Rendering Template**
   - oFirstName : String to be used for **Oldest First**. Default is **Oldest First**
   - lPriceName : String to be used for **Low To High**. Default is **Low To High**
   - hPriceName : String to be used for **High To Low**. Default is **High To Low**
-  - dSortName : String to be used for **Default Soring**. Default is **Default Soring**
+  - dSortName : String to be used for **Default Sorting**. Default is **Default Sorting**
 
  
 * **Options for changing the message**

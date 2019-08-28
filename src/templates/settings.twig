@@ -171,6 +171,36 @@
     value: settings['noMoreData']
 })
 }}
+<hr>
+<div>Scroll Events default settings</div>
+
+{{ forms.textField({
+    label: 'Entries to load',
+    instructions: 'Number of pages(ajax) to load(trigger) on each scroll.On each scroll we trigger load more functionality.',
+    id: 'pagesToLoad',
+    name: 'pagesToLoad',
+    value: '',
+    max: 9999,
+    size: 1,
+    min: 1,
+    type: 'number',
+    value: settings['pagesToLoad']
+})
+}}
+
+{{ forms.textField({
+    label: 'Offset from bottom',
+    instructions: 'Ajax will be triggered when user scrolled to this zone in bottom.',
+    id: 'bottomOffset',
+    name: 'bottomOffset',
+    value: '',
+    max: 9999,
+    size: 1,
+    min: 1,
+    type: 'number',
+    value: settings['bottomOffset']
+})
+}}
 
 {% js on load %}
   

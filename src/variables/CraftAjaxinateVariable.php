@@ -42,12 +42,39 @@ class CraftAjaxinateVariable
     {
         Craft::$app->view->registerAssetBundle(CraftAjaxinateAsset::class);
 
+        //CP setting for pagesToLoad value
+        $pagesToLoad = CraftAjaxinate::$plugin->getSettings()->pagesToLoad;
+        
+        // override CP setting for pagesToLoad value
+        if (isset($options['pagesToLoad'])) {
+            $pagesToLoad = $options['pagesToLoad'];
+        }
+
+        //CP setting for bottomOffset value
+        $bottomOffset = CraftAjaxinate::$plugin->getSettings()->bottomOffset;
+        
+        // override CP setting for bottomOffset value
+        if (isset($options['bottomOffset'])) {
+            $bottomOffset = $options['bottomOffset'];
+        }
+      
+        if (isset($options) && !empty($options['loaderTemplate'])) {
+            // user defined loader
+            $loaderHtml = $this->getLoaderTemplate($options['loaderTemplate']);
+        } else {
+            // default loader
+            $loaderHtml = $this->getdefaultLoaderTemplate();
+        }
+
         Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
 
         $html =  Craft::$app->view->renderTemplate(
             'craft-ajaxinate/_render/_loadmore',
             [
             'options' => $options,
+            'pagesToLoad' => $pagesToLoad,
+            'bottomOffset' => $bottomOffset,
+            'loaderHtml' => $loaderHtml,
             ]
         );
         
@@ -111,6 +138,23 @@ class CraftAjaxinateVariable
         
         Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_SITE);
 
+        return Template::raw($html);
+    }
+
+    public function getLoaderTemplate($path = '')
+    {
+     
+        Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_SITE);
+        $html = Craft::$app->view->renderTemplate($path);
+        Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
+        return Template::raw($html);
+    }
+
+    public function getdefaultLoaderTemplate()
+    {
+        Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
+        $html = Craft::$app->view->renderTemplate('craft-ajaxinate/_defaultloader');
+        Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_SITE);
         return Template::raw($html);
     }
 }

@@ -62,7 +62,7 @@ To install the plugin, follow the below instructions.
 
 - Add this class **"ajaxDataDump"** to any existing element or create a new empty `<div class="ajaxDataDump"></div>`on your template, Plugin will append the new entries to this div/element.
 
-- **Rendering Template** : Create a new **separate template**. In this template, you have access to `{{ entries }}` object. This object has all the entries based on settings. `Don't put any extra markup here like header or footer`. See an example below.
+- **Rendering Template** : Create a new **separate template**. In this template, you have access to `{{ entries }}` object. This object has all the entries based on settings. `Don't put any extra markup here like header or footer`. See the example below.
 
 * Select **Rendering Template** in the plugin’s Setting page or while calling `render()`, that you just created in the above step.
 
@@ -89,7 +89,7 @@ Sample code for calling the **Rendering Template**
 
 ## Steps to add sorting and filters
 
-- All the above steps should be done.
+- All of the above steps should be done.
 - To render sorting you need to add the below code in your template on which your Load More button is available:
 
 ```twig
@@ -140,8 +140,14 @@ Sample code for calling the **Rendering Template**
 
  
 * **Options for changing the message**
-  - noMoreDataMsg : Message to show when no entries is found as per the **above settings** or **user input**.
+  - noMoreDataMsg : Message to show when no entries are found as per the **above settings** or **user input**.
 
+ 
+* **Options for onscroll events**
+  - scrollActive : To activate pass `true` else `false`.You can set the default in CP as well.
+  - pagesToLoad : Number of pages to load on each scroll.
+  - bottomOffset : Number of pixels from the bottom when ajax will be triggered.
+  - loaderTemplate : To override default loader pass your loader template path.
 
 
 ## Sorting Example with options
@@ -293,9 +299,10 @@ Some things to do, and ideas for potential features:
 - [x] Sorting
 - [x] Filters
 - [x] Multiple Load More
-- [x] Custom Queries
+- [x] Custom Queries `new`
 - [x] Option to load entries on onload
 - [x] Filter based on future entries
+- [x] Onscroll `new`
 - [ ] Search
 
 ## Support

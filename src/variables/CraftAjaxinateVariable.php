@@ -42,6 +42,14 @@ class CraftAjaxinateVariable
     {
         Craft::$app->view->registerAssetBundle(CraftAjaxinateAsset::class);
 
+        //CP setting for scrollActive value
+        $scrollActive = CraftAjaxinate::$plugin->getSettings()->scrollActive;
+        
+        // override CP setting for scrollActive value
+        if (isset($options['scrollActive'])) {
+            $scrollActive = $options['scrollActive'];
+        }
+
         //CP setting for pagesToLoad value
         $pagesToLoad = CraftAjaxinate::$plugin->getSettings()->pagesToLoad;
         
@@ -75,6 +83,7 @@ class CraftAjaxinateVariable
             'pagesToLoad' => $pagesToLoad,
             'bottomOffset' => $bottomOffset,
             'loaderHtml' => $loaderHtml,
+            'scrollActive' => $scrollActive
             ]
         );
         

@@ -4,10 +4,10 @@
 {% set pagesToLoad = pagesToLoad ?? 3 %}
 {% set bottomOffset = bottomOffset ?? 300 %}
 {% set loaderHtml = loaderHtml ?? '' %}
-    
+{% set scrollActive = scrollActive ?? false %} 
 
 <form class="ajaxinateLoadMore" name="ajaxinateLoadMore" method="POST">
-	<div id="js_Hb_LoadMore" class="{{ btnWrapperClass }}" data-currentpage="0" data-totalpages="0" data-limit="" data-sorting="0" data-catfilter="" data-extrafilter="[{}]" data-pagesToLoad="{{ pagesToLoad  }}" data-status="1" data-bottomOffset="{{ bottomOffset }}">
+	<div id="js_Hb_LoadMore" class="{{ btnWrapperClass }}" data-currentpage="0" data-totalpages="0" data-limit="" data-sorting="0" data-catfilter="" data-extrafilter="[{}]" data-pagesToLoad="{{ pagesToLoad  }}" data-status="1" data-bottomOffset="{{ bottomOffset }}" data-scrollActive="{{ scrollActive }}">
 	    <span class="loadMoreBtn">{{ loadMoreName }}</span>
 	</div>
 

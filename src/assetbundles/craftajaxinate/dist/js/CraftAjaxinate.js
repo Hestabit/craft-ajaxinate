@@ -16,7 +16,7 @@
     let propFilter = $(".propFilter");
     // added
     let loader = $("#js_Hb_Loader");
-
+    let scrollActive = Boolean(loadMoreBtn.attr("data-scrollActive")) ? Boolean(loadMoreBtn.attr("data-scrollActive")) : false;
     let timeOut;
     let pageLoaded = 0;
     const pagesToLoad = Number(loadMoreBtn.attr("data-pagesToLoad"));
@@ -260,40 +260,41 @@
         }
     };
 
-    // scroll events
-    $(window).scroll(function() {
-        let dataAavailable = Number(loadMoreBtn.attr("data-status"));
+    // scroll events only 
+    if (scrollActive) {
+        $(window).scroll(function() {
+            let dataAavailable = Number(loadMoreBtn.attr("data-status"));
 
-        if (processing) {
-            return false;
-        }
-
-        // if no data found in last ajax attempt
-        if (!dataAavailable) {
-            return false;
-        }
-
-        loadMoreBtn.hide();
-
-        let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
-
-        let isReachingBottom = (document.body.offsetHeight - (window.innerHeight + scrollTop)) < bottomOffset;
-
-        if (isReachingBottom) {
-            processing = true;
-
-            if (pageLoaded >= pagesToLoad) {
-                if (dataAavailable) {
-                    loadMoreBtn.show();
-                }
+            if (processing) {
                 return false;
             }
 
-            console.log('bottom');
-            pageLoaded++;
-            requestAnimationFrame(callDebounce);
-        }
-    });
+            // if no data found in last ajax attempt
+            if (!dataAavailable) {
+                return false;
+            }
+
+            loadMoreBtn.hide();
+
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+
+            let isReachingBottom = (document.body.offsetHeight - (window.innerHeight + scrollTop)) < bottomOffset;
+
+            if (isReachingBottom) {
+                processing = true;
+
+                if (pageLoaded >= pagesToLoad) {
+                    if (dataAavailable) {
+                        loadMoreBtn.show();
+                    }
+                    return false;
+                }
+
+                pageLoaded++;
+                requestAnimationFrame(callDebounce);
+            }
+        });
+    }
 
     let callDebounce = debounce(loadMoreDataAjax, 350);
 
@@ -317,7 +318,6 @@
 
 
     function scrollToTop(wait = 10) {
-        console.log('scrollToTop');
         let scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
         if (scrollTop != 0) {
             window.scrollBy(0, -20);

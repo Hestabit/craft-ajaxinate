@@ -174,36 +174,47 @@
 <hr>
 <div>Scroll Events default settings</div>
 
-{{ forms.textField({
-    label: 'Entries to load',
-    instructions: 'Number of pages(ajax) to load(trigger) on each scroll.On each scroll we trigger load more functionality.',
-    id: 'pagesToLoad',
-    name: 'pagesToLoad',
-    value: '',
-    max: 9999,
-    size: 1,
-    min: 1,
-    type: 'number',
-    value: settings['pagesToLoad']
-})
-}}
+{{ forms.lightswitchField({
+    label: 'Load entries on scroll.',
+    name: 'scrollActive',
+    id: 'scrollActive',
+    on: settings['scrollActive'],
+}) }}
 
-{{ forms.textField({
-    label: 'Offset from bottom',
-    instructions: 'Ajax will be triggered when user scrolled to this zone in bottom.',
-    id: 'bottomOffset',
-    name: 'bottomOffset',
-    value: '',
-    max: 9999,
-    size: 1,
-    min: 1,
-    type: 'number',
-    value: settings['bottomOffset']
-})
-}}
+<div class="js_scrollActiveState" style="display: none;">
+    {{ forms.textField({
+        label: 'Entries to load',
+        instructions: 'Number of pages to load on each scroll event.( On each scroll we trigger load more functionality.) ',
+        id: 'pagesToLoad',
+        name: 'pagesToLoad',
+        value: '',
+        max: 9999,
+        size: 1,
+        min: 1,
+        type: 'number',
+        value: settings['pagesToLoad']
+    })
+    }}
+
+    {{ forms.textField({
+        label: 'Offset from bottom',
+        instructions: 'Ajax will be triggered when user scrolled to this zone in bottom.',
+        id: 'bottomOffset',
+        name: 'bottomOffset',
+        value: '',
+        max: 9999,
+        size: 1,
+        min: 1,
+        type: 'number',
+        value: settings['bottomOffset']
+    })
+    }}
+
+</div>
 
 {% js on load %}
-  
+    
+
     $( "#settings-extraFieldState" ).on('change', function( event ) {
         toggleSorting('#settings-extraFieldState', '.js_extraFieldState');
     });
@@ -211,10 +222,14 @@
     $( "#settings-showFutureEntries" ).on('change', function( event ) {
         toggleSorting('#settings-showFutureEntries', '.js_showFutureEntries');
     });
+
     $( "#settings-showInitEntries" ).on('change', function( event ) {
         toggleSorting('#settings-showInitEntries', '.js_showInitEntries');
     });
 
+    $( "#settings-scrollActive" ).on('change', function( event ) {
+        toggleSorting('#settings-scrollActive', '.js_scrollActiveState');
+    });
 
     function toggleSorting(swithcId, targetDiv) {
        var filterState = $(swithcId).attr('aria-checked'); 
@@ -230,6 +245,7 @@
     toggleSorting('#settings-extraFieldState', '.js_extraFieldState');
     toggleSorting('#settings-showFutureEntries', '.js_showFutureEntries');
     toggleSorting('#settings-showInitEntries', '.js_showInitEntries');
+    toggleSorting('#settings-scrollActive', '.js_scrollActiveState');
 
 
 {% endjs %}

@@ -53,6 +53,9 @@ class Settings extends Model
     
     // number of ajax to trigger on each scroll
     public $pagesToLoad;
+    
+    // default onscroll status
+    public $scrollActive;
 
     // pixels from bottom, ajax will be fired in this zone
     public $bottomOffset;

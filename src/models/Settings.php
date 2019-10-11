@@ -50,6 +50,16 @@ class Settings extends Model
     public $showFutureEntries;
     public $dateFieldSelected;
     public $showInitEntries;
+    
+    // number of ajax to trigger on each scroll
+    public $pagesToLoad;
+    
+    // default onscroll status
+    public $scrollActive;
+
+    // pixels from bottom, ajax will be fired in this zone
+    public $bottomOffset;
+
     // Public Methods
     // =========================================================================
 

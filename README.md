@@ -60,7 +60,8 @@ To install the plugin, follow the below instructions.
 
 ```
 
-- Add this class **"ajaxDataDump"** to any existing element or create a new empty `<div class="ajaxDataDump"></div>`on your template, Plugin will append the new entries to this div/element.
+- Add this class **"ajaxDataDump"** to any existing element or create a new empty `<div class="ajaxDataDump"></div>`on your template or,
+-  Use `containerClass`  within `render()`to create your own custom class that will be used to dump the loaded content. 
 
 - **Rendering Template** : Create a new **separate template**. In this template, you have access to `{{ entries }}` object. This object has all the entries based on settings. `Don't put any extra markup here like header or footer`. See the example below.
 
@@ -152,7 +153,8 @@ Sample code for calling the **Rendering Template**
   - loaderTemplate : To override default loader pass your loader template path.
 
 
-  ```twig
+ ## Load more with scroll parameters 
+ ```twig
   {{ craft.craftAjaxinate.loadMoreVariable({
       loadMoreName: 'Load More',
       scrollActive: true,
@@ -161,16 +163,19 @@ Sample code for calling the **Rendering Template**
       }) 
   }}
 ```
-## Sorting Example with options
 
+ ## Sorting Example with options
+
+```twig
     {{ craft.craftAjaxinate.render({
       selectClass: 'selectClassWrapper',
       optionClass: 'optionClassWrapper',
       sortingWrapperClass: 'sortingWrapperClasss'
     }) }}
+  ```
 
 Load 3 entries on page load and show filters of `featuredEntry (lightswitch), price (number)`.Also, show all child categories of `mensClothing and shoes` and tags of `technology`.
-
+```twig
     {{ craft.craftAjaxinate.render({
       template: 'ajax/stories.twig',
       offset: 3,
@@ -184,9 +189,10 @@ Load 3 entries on page load and show filters of `featuredEntry (lightswitch), pr
       },
       tagGroup: ['technology'],      
     }) }}
+```
 
 Load 3 entries on page load and `shortDescription` should not be empty. As the limit is not passed CP settings will be used.
-
+```twig
     {{ craft.craftAjaxinate.render({
       template: 'ajax/stories.twig',
       offset: 3,
@@ -197,10 +203,12 @@ Load 3 entries on page load and `shortDescription` should not be empty. As the l
       },
       
     }) }} 
+```
 
 
 Load 3 entries on page load and `postDate` before `2019-07-31`.
 
+```twig
     {{ craft.craftAjaxinate.render({
       template: 'ajax/stories.twig',
       offset: 3,
@@ -211,9 +219,11 @@ Load 3 entries on page load and `postDate` before `2019-07-31`.
       },
       
     }) }} 
+```
 
 Load 4 entries on page load and `postDate` before `2019-07-31` and `shortDescription` should not be empty. Each line in `query` has `and` relation between them.
 
+```twig
     {{ craft.craftAjaxinate.render({
       template: 'ajax/stories.twig',
       offset: 4,
@@ -225,9 +235,11 @@ Load 4 entries on page load and `postDate` before `2019-07-31` and `shortDescrip
         'before': '2019-07-26'
       }      
     }) }}
+```
 
 `title` either `foo` or `bar`. As `template` is not passed CP settings will be used.
 
+```twig
     {{ craft.craftAjaxinate.render({
       limit: 5,
       resetBtnState: 1,
@@ -235,11 +247,14 @@ Load 4 entries on page load and `postDate` before `2019-07-31` and `shortDescrip
         'where': ['or', ['like','title','foo'], ['like','title','bar']],
       }      
     }) }}
+```
+
 
 `title` either `foo` or `bar` or `field_featuredEntry` (`lightswitch`) is active.
 
 Append **field_** before handleName.
 
+```twig
     {{ craft.craftAjaxinate.render({
       limit: 5,
       resetBtnState: 1,
@@ -248,11 +263,13 @@ Append **field_** before handleName.
         'orWhere': ['and', ['=','field_featuredEntry',1]],
       }      
     }) }}
+```
 
 Between `2019-07-12` and `2019-07-31` dates.
 
 Append **field_** before handleName.
 
+```twig
     {{ craft.craftAjaxinate.render({
       limit: 5,
       resetBtnState: 1,
@@ -261,21 +278,23 @@ Append **field_** before handleName.
         'orWhere': ['and', ['=','field_featuredEntry',1]],
       }      
     }) }}
+```
 
 
 <details>
-## <summary> Example of csrf  ( There is no need to declare csrf if its already declared in your site)</summary>
 
-```js
-# Example of csrf  ( There is no need to declare csrf if its already declared in your site)
-{% set csrfToken = {
-  csrfTokenName: craft.app.config.general.csrfTokenName,
-  csrfTokenValue: craft.app.request.csrfToken,
-} %}
+## <summary> Example of csrf  ( There is no need to declare csrf if already declared)</summary>
 
-<script type="text/javascript">
-window.Craft = {{ csrfToken|json_encode|raw }};
-</script>
+```twig
+  # Example of csrf  ( There is no need to declare csrf if its already declared in your site)
+  {% set csrfToken = {
+    csrfTokenName: craft.app.config.general.csrfTokenName,
+    csrfTokenValue: craft.app.request.csrfToken,
+  } %}
+
+  {% js %}
+    window.Craft = {{ csrfToken | json_encode | raw }};
+  {% endjs %}
 
 ```
 
@@ -303,7 +322,7 @@ window.Craft = {{ csrfToken|json_encode|raw }};
 
 ## Entries Loader And Filter Roadmap
 
-Some things to do, and ideas for potential features:
+Future development plans for the plugin (if any suggestion then do create a feature request over GitHub):
 
 - [x] Load more entries (Particular template )
 - [x] Option to select the default template in backend

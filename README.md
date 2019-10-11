@@ -24,7 +24,7 @@ If you have already shown some entries (`desc` order) on a template, you can ski
 
 ## Requirements
 
-This plugin requires `Craft CMS 3.0.0` or later.
+This plugin requires `Craft CMS 3.1.0` or later.
 
 ## Installation.
 

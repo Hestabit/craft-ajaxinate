@@ -1,5 +1,12 @@
 # Craft Ajaxinate Changelog
 
+## 2.0.1 - 2019-10-11
+
+### Added
+- Added an option to make your data dump class dynamic using `containerClass` option within `render()`.
+- Added an option to update the success/error message using `messageClass` option within `render() `.
+- Added a new functionality to load data on scroll.
+
 ## 2.0.0 - 2019-08-10
 
 > {note} Please adjust your CP settings as majority of the configuration has been migrated to the template and substantial amount of new options has been introduced.

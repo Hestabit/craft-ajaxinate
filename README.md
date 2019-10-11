@@ -129,6 +129,8 @@ Sample code for calling the **Rendering Template**
   - catWrapperClass : Class to be added on `<div>` of category option
   - checkFieldDiv : Class to be added on `<div>` of checkbox fields
   - sortingWrapperClass : Class to be added on `<div>` of sorting option
+  - messageClass : Class in which error/success messges will be shown.(pass in `render`)
+
  
 * **Sorting control options** Pass below-mentioned options change the default strings.
  
@@ -143,13 +145,22 @@ Sample code for calling the **Rendering Template**
   - noMoreDataMsg : Message to show when no entries are found as per the **above settings** or **user input**.
 
  
-* **Options for onscroll events**
+* **Options for onscroll events (pass parameters in `loadMoreVariable`)**
   - scrollActive : To activate pass `true` else `false`.You can set the default in CP as well.
   - pagesToLoad : Number of pages to load on each scroll.
   - bottomOffset : Number of pixels from the bottom when ajax will be triggered.
   - loaderTemplate : To override default loader pass your loader template path.
 
 
+  ```twig
+  {{ craft.craftAjaxinate.loadMoreVariable({
+      loadMoreName: 'Load More',
+      scrollActive: true,
+      pagesToLoad: 2,
+      bottomOffset: 300
+      }) 
+  }}
+```
 ## Sorting Example with options
 
     {{ craft.craftAjaxinate.render({

@@ -24,8 +24,8 @@
     // end
     // fetch data and update the entries
     $.fn.loadData = function(options) {
-        // loadMoreBtn.show();
         loader.show();
+        loadMoreBtn.show();
         var currentpage = Number(loadMoreBtn.attr("data-currentpage"));
 
         let settings = $.extend({
@@ -39,6 +39,17 @@
             },
             options
         );
+        let containerClass = settings.settings.containerClass;
+        let messageClass = settings.settings.messageClass;
+
+        if (containerClass && containerClass != null) {
+            settings.containerClass = containerClass;
+        }
+        if (messageClass && messageClass != null) {
+            settings.messageClass = messageClass;
+        }
+
+
         $(settings.messageClass).html("");
 
         if (settings.action == "reset") {
@@ -83,7 +94,7 @@
         });
 
         request.fail(function(jqXHR, textStatus) {
-            alert("Request failed: " + textStatus);
+            console.log("[Craft-ajaxinate] :  Request failed: " + textStatus);
         });
 
         // return this;
@@ -256,7 +267,7 @@
                 settings
             });
         } catch (e) {
-            console.log(`Error occured in craft-ajaxinate :: ${e}`);
+            console.log(`[Craft-ajaxinate] error : " ${e}`);
         }
     };
 

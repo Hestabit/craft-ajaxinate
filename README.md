@@ -1,6 +1,6 @@
 <p align="center"><img src="resources/img/entry-loader.svg" width="381" height="148" alt="Entries Loader And Filter plugin"></p>
 
-# Entries Loader And Filter plugin for Craft CMS 3.x
+# Entries Loader And Filter plugin for Craft CMS 4.x
 
 This plugin will give you an option to load more entries using ajax.
 
@@ -24,7 +24,9 @@ If you have already shown some entries (`desc` order) on a template, you can ski
 
 ## Requirements
 
-This plugin requires `Craft CMS 3.1.0` or later.
+This plugin requires `Craft CMS 4.X` or later.
+
+For Older versions please go to [Craft V3](https://plugins.craftcms.com/search?q=ajaxinate&tab=plugins&craft3)
 
 ## Installation.
 

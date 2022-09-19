@@ -418,16 +418,22 @@ class CraftAjaxinateService extends Component
         $numbeRange = [];
 
         $entryQuery = Entry::find();
+        $field = (new Query())
+            ->select(['type','name', 'handle', 'columnSuffix'])
+            ->from(['{{%fields}}'])
+            ->where(['handle' => $handle])
+            ->one();
+        $columnSerfix = $field['columnSuffix'];
         $entryQuery->$handle('>= 0');
-
-        $min = $entryQuery->min("field_{$handle}");
+        
+        $min = $entryQuery->min("field_{$handle}_{$columnSerfix}");
        
 
         if (!is_numeric($min)) {
             return false;
         }
        
-        $max = $entryQuery->max("field_{$handle}");
+        $max = $entryQuery->max("field_{$handle}_{$columnSerfix}");
         
         $numbeRange['handle'] = (string)$handle;
         $numbeRange['min'] = (int)$min;

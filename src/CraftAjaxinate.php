@@ -18,6 +18,7 @@ use hestabit\craftajaxinate\models\Settings;
 
 use Craft;
 use craft\base\Plugin;
+use craft\base\Model;
 use craft\services\Plugins;
 use craft\events\PluginEvent;
 use craft\web\UrlManager;
@@ -52,7 +53,8 @@ class CraftAjaxinate extends Plugin
      *
      * @var string
      */
-    public $schemaVersion = '1.0.0';
+    public string $schemaVersion = '1.0.0';
+    // public $schemaVersion = '1.0.0';
 
     // Public Methods
     // =========================================================================
@@ -70,7 +72,7 @@ class CraftAjaxinate extends Plugin
         self::$plugin = $this;
 
         // Add in our Twig extensions
-        Craft::$app->view->registerTwigExtension(new CraftAjaxinateTwigExtension());
+     //   Craft::$app->view->registerTwigExtension(new CraftAjaxinateTwigExtension());
 
         // Register our site routes
         Event::on(
@@ -133,7 +135,7 @@ class CraftAjaxinate extends Plugin
      *
      * @return \craft\base\Model|null
      */
-    protected function createSettingsModel()
+    protected function createSettingsModel(): ?Model
     {
         return new Settings();
     }

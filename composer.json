@@ -2,7 +2,7 @@
     "name": "hestabit/craft-ajaxinate",
     "description": "With this Plugin, you have now an option to load more entries (using ajax). You can refine the content that you want to load by using Filters based on Fields and custom entry query.",
     "type": "craft-plugin",
-    "version": "2.0.1",
+    "version": "3.0.0",
     "keywords": [
         "craft",
         "cms",
@@ -42,7 +42,7 @@
     "contributors": "Saurabh Ranjan <saurabh.ranjan@hestabit.in> (https://github.com/maddyBoy)",
     "require":
     {
-        "craftcms/cms": "^3.1.0"
+        "craftcms/cms": "^4.0.0"
     },
     "autoload":
     {

@@ -1,5 +1,11 @@
 # Craft Ajaxinate Changelog
 
+## 3.0.0 - 2022-09-19
+
+### Added
+- Fixed Composer 2 compatibility
+- Supported upto Craft version `4.x`
+
 ## 2.0.1 - 2019-10-11
 
 ### Added

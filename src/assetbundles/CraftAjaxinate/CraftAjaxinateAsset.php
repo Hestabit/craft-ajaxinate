@@ -46,7 +46,7 @@ class CraftAjaxinateAsset extends AssetBundle
     public function init()
     {
         // define the path that your publishable resources live
-        $this->sourcePath = "@hestabit/craftajaxinate/assetbundles/craftajaxinate/dist";
+        $this->sourcePath = "@hestabit/craftajaxinate/assetbundles/CraftAjaxinate/dist";
 
         // define the dependencies
         $this->depends = [
